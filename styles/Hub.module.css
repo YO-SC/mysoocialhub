@@ -1,0 +1,7 @@
+@tailwind components;
+
+@layer components {
+  .container {
+    @apply h-screen w-screen bg-red-600;
+  }
+}
