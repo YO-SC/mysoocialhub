@@ -10,11 +10,13 @@ export default function Hub() {
   return (
     <div className=" bg-red-600 lg:grid h-screen">
       {/* user info */}
-      <div className="bg-blue-500 col-start-1 col-end-5">
-        <div className="bg-red-600">
+      <div className="bg-blue-500 col-start-1 col-end-5 flex flex-col">
+        <div className="bg-red-600  h-1/2 w-1/2 self-center">
           <ProfilePicture
             // className="flex-1"
             src="https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            // width={200}
+            // height={200}
             layout="responsive"
           />
         </div>
