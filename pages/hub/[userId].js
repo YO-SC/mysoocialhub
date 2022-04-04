@@ -27,9 +27,11 @@ export default function Hub() {
         </div>
       </section>
 
-      {/* social media hubs */}
-      <section className="bg-green-500 col-start-3 col-end-12">
-        Social Media Hubs
+      {/* social medias */}
+      {/* // NOTE this section should have a grid that takes into account how many social medias the user has */}
+      <section className="bg-green-500 col-start-3 col-end-12 p-4 grid gap-4 overflow-y-scroll">
+        {/* // TODO if just 1 social media, apply flex-1, if not then organize them */}
+        <div className="bg-purple-600 p-8 rounded-xl">Social Media Card</div>
       </section>
     </main>
   );
