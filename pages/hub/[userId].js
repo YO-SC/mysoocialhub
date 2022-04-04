@@ -8,9 +8,9 @@ export default function Hub() {
   const { userId } = router.query;
 
   return (
-    <div className=" bg-red-600 lg:grid h-screen">
+    <main className=" bg-red-600 lg:grid h-screen">
       {/* user info */}
-      <div className="bg-blue-500 col-start-1 col-end-3 flex flex-col p-4 gap-4">
+      <section className="bg-blue-500 col-start-1 col-end-3 flex flex-col p-4 gap-4">
         <div className="bg-red-600 w-3/4 self-center">
           <ProfilePicture
             // className="flex-1"
@@ -25,12 +25,12 @@ export default function Hub() {
           <h1 className="font-bold text-2xl">Username</h1>
           <h3 className="text-md">Description/About</h3>
         </div>
-      </div>
+      </section>
 
       {/* social media hubs */}
-      <div className="bg-green-500 col-start-3 col-end-12">
+      <section className="bg-green-500 col-start-3 col-end-12">
         Social Media Hubs
-      </div>
-    </div>
+      </section>
+    </main>
   );
 }
