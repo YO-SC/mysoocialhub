@@ -30,7 +30,7 @@ export default function Hub() {
 
       {/* social medias */}
       {/* // NOTE this section should have a grid that takes into account how many social medias the user has */}
-      <section className="bg-green-500 col-start-3 col-end-12 p-4 grid gap-4 overflow-y-scroll">
+      <section className="bg-green-500 col-start-3 col-end-12 p-4 grid gap-4 overflow-y-auto">
         {/* // NOTE think about how to dynamically set / pass the icon component based on DB data */}
         <SocialMediaCard icon={<FaYoutube />} name="YouTube" />
       </section>
