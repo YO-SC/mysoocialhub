@@ -28,7 +28,7 @@ export default function Hub() {
           />
         </div>
 
-        <div className="h-full w-3/4 self-center break-words bg-red-500">
+        <div className="h-full w-3/4 self-center break-words">
           <h1 className="font-bold text-2xl">Username</h1>
           <h2 className="text-md">Description/About</h2>
         </div>
