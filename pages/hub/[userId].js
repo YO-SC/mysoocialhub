@@ -15,9 +15,9 @@ export default function Hub() {
   const { userId } = router.query;
 
   return (
-    <main className="  lg:grid h-screen">
+    <main className="lg:grid lg:grid-cols-12 h-screen w-full">
       {/* user info */}
-      <section className="bg-primary col-start-1 col-end-3 flex flex-col p-4 gap-4">
+      <section className="bg-primary col-span-3 flex flex-col justify-center items-center p-4 gap-4">
         <div className=" w-3/4 self-center">
           <ProfilePicture
             // className="flex-1"
@@ -28,7 +28,7 @@ export default function Hub() {
           />
         </div>
 
-        <div className=" h-full w-3/4 self-center break-words">
+        <div className="h-full w-3/4 self-center break-words bg-red-500">
           <h1 className="font-bold text-2xl">Username</h1>
           <h2 className="text-md">Description/About</h2>
         </div>
@@ -36,7 +36,7 @@ export default function Hub() {
 
       {/* social medias */}
       {/* // NOTE this section should have a grid that takes into account how many social medias the user has */}
-      <section className="bg-secondary col-start-3 col-end-12 px-10 py-4 flex flex-col gap-4 overflow-y-auto">
+      <section className="bg-secondary col-span-9 px-10 py-4 flex flex-col gap-4 overflow-y-auto">
         {/* // NOTE think about how to dynamically set / pass the icon component based on DB data. This goes for the icon size and color props too */}
         <SocialMediaCard
           icon={<FaFacebook size="2.5rem" color="white" />}
