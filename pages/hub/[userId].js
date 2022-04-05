@@ -71,7 +71,7 @@ const SocialMediaCard = ({
       <a
         // w-fit h-fit flex-1 <- if need to dynamically adjust size
         className="flex gap-3 items-center justify-center"
-        href={'https://www.youtube.com/channel/UCvjLVsW-VlUyAssyS3QsRQA'}
+        href={url}
         target="_blank"
       >
         <span>{icon}</span>
