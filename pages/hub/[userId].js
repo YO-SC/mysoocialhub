@@ -67,17 +67,15 @@ const SocialMediaCard = ({
 }) => {
   return (
     <div className={`${bgColor} p-8 rounded-xl`}>
-      {/* <span> */}
       <a
         // w-fit h-fit flex-1 <- if need to dynamically adjust size
-        className="flex gap-3 items-center justify-center"
+        className="flex gap-3 items-center justify-between w-fit"
         href={url}
         target="_blank"
       >
         <span>{icon}</span>
         <h3 className="text-lg font-semibold text-white">{name}</h3>
       </a>
-      {/* </span> */}
     </div>
   );
 };
