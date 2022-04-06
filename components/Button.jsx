@@ -3,7 +3,8 @@ import React from 'react';
 export default function Button(props) {
   const {
     className = '',
-    bgColor = 'bg-accent-primary',
+    color = 'primary',
+    bgColor = `bg-accent-${color}`,
     text = 'Button',
     textColor = 'text-white',
     onClick = () => console.log('onclick btn event'),
