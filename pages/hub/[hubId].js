@@ -51,8 +51,8 @@ export default function Hub(props) {
   // TODO when fetching for data, if hub does not exists display a 404 not found
   // TODO if this is the logged in user's hub, be able to edit stuff
   // const router = useRouter();
-  // TODO use userId to fetch users hub data on future implementation
-  // const { userId } = router.query;
+  // TODO use hubId to fetch users hub data on future implementation
+  // const { hubId } = router.query;
   console.log('le page props', props);
 
   const {
@@ -143,7 +143,7 @@ const SocialMediaCard = ({
 
 export async function getServerSideProps(context) {
   const {
-    params: { userId },
+    params: { hubId },
   } = context;
   // make api stuff here then return the json to the page component
 
@@ -151,16 +151,16 @@ export async function getServerSideProps(context) {
     .from('hub')
     .select(
       `id,
-    theme(
-      id,
-      primaryColor,
-      secondaryColor
+      theme(
+        id,
+        primaryColor,
+        secondaryColor
+      )
+    `
     )
-  `
-    )
-    .eq('id', userId)
+    .eq('id', hubId)
     .single();
-  // .filter('id', 'in', `${[userId]}`);
+  // .filter('id', 'in', `${[hubId]}`);
   // FIXME hub  relations not showing up on data
 
   return {
