@@ -4,8 +4,9 @@ import { useRouter } from 'next/router';
 import { FaReact } from 'react-icons/fa';
 // import * as FontIcon from 'react-icons/fa';
 import ProfilePicture from '../../components/ProfilePicture';
+import { supabase } from '../../utils/supabaseClient';
 
-export default function Hub() {
+export default function Hub(props) {
   // test data
   const userHub = {
     id: `abc${Math.floor(Math.random() * 10000)}`,
@@ -49,10 +50,10 @@ export default function Hub() {
 
   // TODO when fetching for data, if hub does not exists display a 404 not found
   // TODO if this is the logged in user's hub, be able to edit stuff
-  const router = useRouter();
+  // const router = useRouter();
   // TODO use userId to fetch users hub data on future implementation
-  const { userId } = router.query;
-  console.log(userHub);
+  // const { userId } = router.query;
+  console.log('le page props', props);
 
   const {
     user: { avatar, username, description },
@@ -139,3 +140,33 @@ const SocialMediaCard = ({
     </div>
   );
 };
+
+export async function getServerSideProps(context) {
+  const {
+    params: { userId },
+  } = context;
+  // make api stuff here then return the json to the page component
+
+  let { data: hub, error } = await supabase
+    .from('hub')
+    .select(
+      `id,
+    theme(
+      id,
+      primaryColor,
+      secondaryColor
+    )
+  `
+    )
+    .eq('id', userId)
+    .single();
+  // .filter('id', 'in', `${[userId]}`);
+  // FIXME hub  relations not showing up on data
+
+  return {
+    props: {
+      hub,
+      error,
+    }, // will be passed to the page component as props
+  };
+}
