@@ -117,6 +117,8 @@ export default function Hub() {
   );
 }
 
+// FIXME make both dynamic icons and hub theme work
+
 const SocialMediaCard = ({
   bgColor = 'bg-accent-primary',
   icon = <FaReact size="2.5rem" color="white" />,
@@ -131,7 +133,7 @@ const SocialMediaCard = ({
         href={url}
         target="_blank"
       >
-        <span>{icon}</span>
+        {/* <span>{icon}</span> */}
         <h3 className="text-lg font-semibold text-white">{name}</h3>
       </a>
     </div>
