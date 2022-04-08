@@ -1,6 +1,7 @@
-import Input from '../components/Input';
-import Button from '../components/Button';
 import Head from 'next/head';
+import Link from 'next/link';
+import Button from '../components/Button';
+import Input from '../components/Input';
 
 export default function Login() {
   return (
@@ -20,7 +21,10 @@ export default function Login() {
           <h1 className="text-3xl font-bold uppercase mb-2">Login</h1>
           <Input color="secondary" type="email" placeholder="email" />
           <Input color="secondary" type="password" placeholder="password" />
-          <Button className="self-end" text="Login" />
+          {/*  // TODO make link href dynamic upon login, redirect user after login check/mutation */}
+          <Link href="/hub/1234">
+            <Button className="self-end" text="Login" />
+          </Link>
         </div>
       </section>
 
