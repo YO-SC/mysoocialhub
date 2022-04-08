@@ -151,6 +151,13 @@ export async function getServerSideProps(context) {
     .from('hub')
     .select(
       `id,
+      hub_owner!hub_hub_owner_fkey(
+        id,
+        avatar,
+        username,
+        description
+      ),
+      social_medias,
       theme(
         id,
         primaryColor,
