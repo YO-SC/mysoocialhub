@@ -7,60 +7,17 @@ import ProfilePicture from '../../components/ProfilePicture';
 import { supabase } from '../../utils/supabaseClient';
 
 export default function Hub(props) {
-  // test data
-  const userHub = {
-    id: `abc${Math.floor(Math.random() * 10000)}`,
-    user: {
-      id: `abc${Math.floor(Math.random() * 10000)}`,
-      avatar: '/photo.jpg',
-      username: 'MKBHD',
-      description:
-        'MKBHD: Quality Tech Videos | YouTuber | Geek | Consumer Electronics | Tech Head | Internet Personality!',
-    },
-    socialMedias: [
-      {
-        id: `abc${Math.floor(Math.random() * 10000)}`,
-        icon: 'youtube',
-        name: 'YouTube',
-        url: 'https://youtube.com/c/mkbhd',
-      },
-      {
-        id: `abc${Math.floor(Math.random() * 10000)}`,
-        icon: 'twitter',
-        name: 'Twitter',
-        url: 'https://twitter.com/c/MKBHD',
-      },
-      {
-        id: `abc${Math.floor(Math.random() * 10000)}`,
-        icon: 'instagram',
-        name: 'Instagram',
-        url: 'https://instagram.com/MKBHD',
-      },
-    ],
-    theme: {
-      // TODO check if colors are sent to the backend with the '#', if not then add it
-      primaryColor: null,
-      secondaryColor: null,
-      primaryAccent: null,
-      secondaryAccent: null,
-      primaryText: null,
-      secondaryText: null,
-    },
-  };
-
   // TODO when fetching for data, if hub does not exists display a 404 not found
   // TODO if this is the logged in user's hub, be able to edit stuff
-  // const router = useRouter();
-  // TODO use hubId to fetch users hub data on future implementation
-  // const { hubId } = router.query;
-  console.log('le page props', props);
 
   const {
-    user: { avatar, username, description },
-    socialMedias,
-    theme,
-    theme: { primaryColor, secondaryColor },
-  } = userHub;
+    hub: {
+      owner: { avatar, username, description },
+      social_medias: socialMedias,
+      // theme,
+      theme: { primaryColor, secondaryColor },
+    },
+  } = props;
 
   return (
     <main className="lg:grid lg:grid-cols-12 h-screen w-full">
@@ -80,14 +37,7 @@ export default function Hub(props) {
         } col-span-3 flex flex-col justify-center items-center p-4 gap-4`}
       >
         <div className=" w-3/4 self-center">
-          <ProfilePicture
-            // className="flex-1"
-            // TODO have a fallback source, just in case
-            src={avatar}
-            // width={200}
-            // height={200}
-            layout="responsive"
-          />
+          <ProfilePicture src={avatar ?? '/photo.jpg'} layout="responsive" />
         </div>
 
         <div className="h-full w-3/4 self-center break-words">
@@ -101,13 +51,10 @@ export default function Hub(props) {
       <section
         className={`${
           secondaryColor ? `bg-[${secondaryColor}]` : 'bg-secondary'
-        } col-span-9 px-10 py-4 flex flex-col gap-4 overflow-y-auto`}
+        } 
+        col-span-9 px-10 py-4 flex flex-col gap-4 overflow-y-auto`}
       >
         {/* // NOTE think about how to dynamically set / pass the icon component based on DB data. This goes for the icon size and color props too */}
-        {/* <SocialMediaCard
-          icon={<FaFacebook size="2.5rem" color="white" />}
-          name="Facebook"
-        /> */}
         {socialMedias.map((socialMedia) => {
           const { id, name, url } = socialMedia;
 
@@ -145,7 +92,6 @@ export async function getServerSideProps(context) {
   const {
     params: { hubId },
   } = context;
-  // make api stuff here then return the json to the page component
 
   let { data: hub, error: errHub } = await supabase
     .from('hub')
@@ -178,10 +124,8 @@ export async function getServerSideProps(context) {
     )
     .eq('hub', hubId);
 
-  // .filter('id', 'in', `${[hubId]}`);
-  // FIXME hub  relations not showing up on data
-  // TODO use le db data as props in Page component
-  hub['social_media'] = [...hubSocialMedia];
+  // inserting hub social medias to the hub obj
+  hub['social_medias'] = [...hubSocialMedia];
 
   return {
     props: {
