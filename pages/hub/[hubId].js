@@ -37,7 +37,10 @@ export default function Hub(props) {
         } col-span-3 flex flex-col justify-center items-center p-4 gap-4`}
       >
         <div className=" w-3/4 self-center">
-          <ProfilePicture src={avatar ?? '/photo.jpg'} layout="responsive" />
+          <ProfilePicture
+            src={avatar ?? '/default_profile_picture.png'}
+            layout="responsive"
+          />
         </div>
 
         <div className="h-full w-3/4 self-center break-words">
