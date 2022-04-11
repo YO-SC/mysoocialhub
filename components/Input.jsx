@@ -12,6 +12,7 @@ export default function Input(props) {
     placeholder = 'input',
     name = type,
     id = type,
+    onChange = () => console.log('changing input'),
   } = props;
 
   return (
@@ -21,6 +22,7 @@ export default function Input(props) {
       placeholder={placeholder}
       name={name}
       id={id}
+      onChange={onChange}
     />
   );
 }
