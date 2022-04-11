@@ -1,13 +1,13 @@
+import Error from 'next/error';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
-// import React from 'react';
 import { FaReact } from 'react-icons/fa';
-// import * as FontIcon from 'react-icons/fa';
 import ProfilePicture from '../../components/ProfilePicture';
 import { supabase } from '../../utils/supabaseClient';
 
 export default function Hub(props) {
-  // TODO when fetching for data, if hub does not exists display a 404 not found
+  if (props.errors.errHub || props.errors.errHubSocialMedia) {
+    return <Error statusCode={404} />;
+  }
   // TODO if this is the logged in user's hub, be able to edit stuff
 
   const {
@@ -128,7 +128,9 @@ export async function getServerSideProps(context) {
     .eq('hub', hubId);
 
   // inserting hub social medias to the hub obj
-  hub['social_medias'] = [...hubSocialMedia];
+  if (hubSocialMedia && hubSocialMedia.length !== 0) {
+    hub['social_medias'] = [...hubSocialMedia];
+  }
 
   return {
     props: {
