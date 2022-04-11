@@ -2,8 +2,31 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Button from '../components/Button';
 import Input from '../components/Input';
+import { supabase } from '../utils/supabaseClient';
+import { useRouter } from 'next/router';
 
 export default function Login() {
+  const router = useRouter();
+
+  const userLogin = async (email, password) => {
+    const { user, error } = await supabase.auth.signIn({
+      email,
+      password,
+    });
+
+    // console.log('the logged in user', user);
+    // console.log('the logged in error', error);
+    const { data: hub, error: errHub } = await supabase
+      .from('hub')
+      .select('id')
+      .eq('owner', user.id)
+      .single();
+
+    // console.log(hub);
+
+    return router.push(`/hub/${hub.id}`);
+  };
+
   return (
     <div className="bg-red-500 h-screen lg:grid grid-cols-12">
       <Head>
@@ -22,9 +45,13 @@ export default function Login() {
           <Input color="secondary" type="email" placeholder="email" />
           <Input color="secondary" type="password" placeholder="password" />
           {/*  // TODO make link href dynamic upon login, redirect user after login check/mutation */}
-          <Link href="/hub/1234">
-            <Button className="self-end" text="Login" />
-          </Link>
+          {/* <Link href="/hub/1234"> */}
+          <Button
+            className="self-end"
+            text="login"
+            onClick={() => userLogin('yodofi7423@bamibi.com', '12345678')}
+          />
+          {/* </Link> */}
         </div>
       </section>
 

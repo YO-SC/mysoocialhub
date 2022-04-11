@@ -11,6 +11,10 @@ export default function SignUp() {
       password,
     });
 
+    console.log('signed up user', user);
+    console.log('signed up user session', session);
+    console.error('signed up user', error);
+
     // TODO after user signs up, create a hub for them, redirect to it, the user should be able to "fill" the hub with data
   };
 
@@ -32,15 +36,13 @@ export default function SignUp() {
           <Input color="secondary" type="email" placeholder="email" />
           <Input color="secondary" type="password" placeholder="password" />
           {/*  // TODO make link href dynamic upon sign up, redirect user after sign up check/mutation */}
-          <Link href="/hub/1234">
-            <Button
-              className="self-end"
-              text="sign up"
-              onClick={() =>
-                userSignUp('example@email.com', 'example-password')
-              }
-            />
-          </Link>
+          {/* <Link href="/hub/1234"> */}
+          <Button
+            className="self-end"
+            text="sign up"
+            onClick={() => userSignUp('yodofi7423@bamibi.com', '12345678')}
+          />
+          {/* </Link> */}
         </div>
       </section>
 
