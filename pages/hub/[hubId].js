@@ -147,17 +147,16 @@ export async function getServerSideProps(context) {
   } = context;
   // make api stuff here then return the json to the page component
 
-  let { data: hub, error } = await supabase
+  let { data: hub, error: errHub } = await supabase
     .from('hub')
     .select(
       `id,
-      hub_owner!hub_hub_owner_fkey(
+      owner(
         id,
         avatar,
         username,
         description
       ),
-      social_medias,
       theme(
         id,
         primaryColor,
@@ -167,13 +166,27 @@ export async function getServerSideProps(context) {
     )
     .eq('id', hubId)
     .single();
+
+  let { data: hubSocialMedia, error: errHubSocialMedia } = await supabase
+    .from('hub_social_media')
+    .select(
+      `id,
+      icon,
+      name,
+      url
+    `
+    )
+    .eq('hub', hubId);
+
   // .filter('id', 'in', `${[hubId]}`);
   // FIXME hub  relations not showing up on data
+  // TODO use le db data as props in Page component
+  hub['social_media'] = [...hubSocialMedia];
 
   return {
     props: {
       hub,
-      error,
+      errors: { errHub, errHubSocialMedia },
     }, // will be passed to the page component as props
   };
 }
