@@ -21,9 +21,15 @@ export default function Home() {
             SHARE ALL YOUR SOCIALS <br /> WITH A SINGLE LINK
           </h1>
 
-          <Link href="/login">
-            <Button className="self-center" text="Login" />
-          </Link>
+          <span className="flex gap-4 items-center justify-center">
+            <Link href="/signup">
+              <Button className="self-center" text="Sign Up" />
+            </Link>
+
+            <Link href="/login">
+              <Button className="self-center" text="Login" />
+            </Link>
+          </span>
         </div>
       </section>
 
