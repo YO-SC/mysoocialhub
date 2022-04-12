@@ -19,6 +19,10 @@ export default function Hub(props) {
     },
   } = props;
 
+  // const user = supabase.auth.user();
+  // console.log(user);
+  // FIXME user arrives null, this contains user info. this happens because the user has not verified their email. Create a verification flow
+
   return (
     <main className="lg:grid lg:grid-cols-12 h-screen w-full">
       <Head>
