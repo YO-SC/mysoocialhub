@@ -58,11 +58,12 @@ export default function Hub(props) {
         col-span-9 px-10 py-4 flex flex-col gap-4 overflow-y-auto`}
       >
         {/* // NOTE think about how to dynamically set / pass the icon component based on DB data. This goes for the icon size and color props too */}
-        {socialMedias.map((socialMedia) => {
-          const { id, name, url } = socialMedia;
+        {socialMedias &&
+          socialMedias.map((socialMedia) => {
+            const { id, name, url } = socialMedia;
 
-          return <SocialMediaCard key={id} name={name} url={url} />;
-        })}
+            return <SocialMediaCard key={id} name={name} url={url} />;
+          })}
       </section>
     </main>
   );
