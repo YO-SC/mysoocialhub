@@ -37,7 +37,6 @@ export default function SignUp() {
         avatar: null,
         username: null,
         description: null,
-        hub: null,
       });
 
     console.log(hubOwnerData);
