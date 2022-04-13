@@ -61,15 +61,16 @@ export default function Hub(props) {
   // console.log(user);
 
   // CRUD mutations
-  const updateProfile = async (userId, avatar, username, description) => {
+  const updateProfile = async (userId, username, description) => {
     // TODO have better UX/UI for if returns
     if (!userId) return alert('please provide a userId');
     if (!username) return alert('please put a username');
     if (!description) return alert('please put a description');
 
+    // TODO be able to update avatar
     const { data, error } = await supabase
       .from('hub_owner')
-      .update({ avatar, username, description })
+      .update({ username, description })
       .eq('id', userId);
 
     setEditing(!editing);
@@ -155,7 +156,7 @@ export default function Hub(props) {
             <Button
               text="Complete Edit"
               onClick={() =>
-                updateProfile(userId, null, usernameState, descriptionState)
+                updateProfile(userId, usernameState, descriptionState)
               }
             />
           )}
