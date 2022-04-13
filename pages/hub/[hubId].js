@@ -3,25 +3,36 @@ import Head from 'next/head';
 import { FaReact } from 'react-icons/fa';
 import ProfilePicture from '../../components/ProfilePicture';
 import { supabase } from '../../utils/supabaseClient';
+import { useState, useEffect } from 'react';
+
+const user = supabase.auth.user();
 
 export default function Hub(props) {
   if (props.errors.errHub || props.errors.errHubSocialMedia) {
     return <Error statusCode={404} />;
   }
-  // TODO if this is the logged in user's hub, be able to edit stuff
 
+  const [userId, setUserId] = useState();
+  // TODO if this is the logged in user's hub, be able to edit stuff
   const {
+    // user: { id: loggedInUserId },
     hub: {
-      owner: { avatar, username, description },
+      owner: { id: hubOwnerId, avatar, username, description },
       social_medias: socialMedias,
       // theme,
       theme: { primaryColor, secondaryColor },
     },
   } = props;
 
-  // const user = supabase.auth.user();
-  // console.log(user);
+  useEffect(() => {
+    if (user) {
+      setUserId(user.id);
+    }
+  }, []);
+
   // FIXME user arrives null, this contains user info. this happens because the user has not verified their email. Create a verification flow
+  // console.log(loggedInUserId);
+  // console.log(user);
 
   return (
     <main className="lg:grid lg:grid-cols-12 h-screen w-full">
@@ -48,6 +59,9 @@ export default function Hub(props) {
         </div>
 
         <div className="h-full w-3/4 self-center break-words">
+          {userId === hubOwnerId && (
+            <p>you should see this only if you can edit</p>
+          )}
           <h1 className="font-bold text-2xl mb-2">{username}</h1>
           <h2 className="text-md">{description}</h2>
         </div>
@@ -100,6 +114,7 @@ export async function getServerSideProps(context) {
   const {
     params: { hubId },
   } = context;
+  // const user = supabase.auth.user();
 
   let { data: hub, error: errHub } = await supabase
     .from('hub')
@@ -140,6 +155,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       hub,
+      // user,
       errors: { errHub, errHubSocialMedia },
     }, // will be passed to the page component as props
   };
