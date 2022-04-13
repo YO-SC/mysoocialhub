@@ -5,6 +5,7 @@ import { FaReact } from 'react-icons/fa';
 import ProfilePicture from '../../components/ProfilePicture';
 import { supabase } from '../../utils/supabaseClient';
 import Input from '../../components/Input';
+import Button from '../../components/Button';
 
 const user = supabase.auth.user();
 
@@ -14,6 +15,9 @@ export default function Hub(props) {
   }
 
   const [ableToEdit, setAbleToEdit] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [usernameEdit, setUsernameEdit] = useState('');
+  const [descriptionEdit, setDescriptionEdit] = useState('');
   // TODO if this is the logged in user's hub, be able to edit stuff
   const {
     hub: {
@@ -60,9 +64,26 @@ export default function Hub(props) {
         </div>
 
         <div className="h-full w-3/4 self-center break-words">
-          {ableToEdit && <p>you should see this only if you can edit</p>}
-          <h1 className="font-bold text-2xl mb-2">{username}</h1>
-          <h2 className="text-md">{description}</h2>
+          {editing ? (
+            <div>
+              <Input
+                className="mb-2"
+                placeholder="Username"
+                onChange={(e) => setUsernameEdit(e.target.value)}
+              />
+              <Input
+                placeholder="Description"
+                onChange={(e) => setDescriptionEdit(e.target.value)}
+              />
+            </div>
+          ) : (
+            <div>
+              <h1 className="font-bold text-2xl mb-2">
+                {username ?? 'Username'}
+              </h1>
+              <h2 className="text-md">{description ?? 'Description'}</h2>
+            </div>
+          )}
         </div>
       </section>
 
@@ -82,6 +103,19 @@ export default function Hub(props) {
             return <SocialMediaCard key={id} name={name} url={url} />;
           })}
       </section>
+
+      {ableToEdit && (
+        <span className="absolute right-5 bottom-5 flex gap-3">
+          {editing && (
+            <Button
+              text="Complete Edit"
+              // onClick={() => setEditing(!editing)}
+            />
+          )}
+
+          <Button text="Edit" onClick={() => setEditing(!editing)} />
+        </span>
+      )}
     </main>
   );
 }
