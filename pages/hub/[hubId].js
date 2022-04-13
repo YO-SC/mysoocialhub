@@ -140,6 +140,13 @@ export default function Hub(props) {
 
             return <SocialMediaCard key={id} name={name} url={url} />;
           })}
+
+        {(!socialMedias || ableToEdit) && (
+          <Button
+            className="!w-full !p-8 text-lg font-semibold"
+            text="Add social media"
+          />
+        )}
       </section>
 
       {ableToEdit && (
