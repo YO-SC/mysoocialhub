@@ -18,9 +18,8 @@ export default function Hub(props) {
   const [editing, setEditing] = useState(false);
   const [userId, setUserId] = useState();
   const [avatarEdit, setAvatarEdit] = useState('');
-  const [usernameEdit, setUsernameEdit] = useState('');
-  const [descriptionEdit, setDescriptionEdit] = useState('');
-  // TODO if this is the logged in user's hub, be able to edit stuff
+  const [usernameState, setUsernameState] = useState('');
+  const [descriptionState, setDescriptionState] = useState('');
   const {
     hub: {
       owner: { id: hubOwnerId, avatar, username, description },
@@ -37,18 +36,29 @@ export default function Hub(props) {
       }
     }
 
-    if (username) setUsernameEdit(username);
-    if (description) setDescriptionEdit(description);
+    if (username) setUsernameState(username);
+    if (description) setDescriptionState(description);
+
+    const profileSubscription = supabase
+      .from('hub_owner')
+      .on('UPDATE', (payload) => {
+        // console.log('Change received!', payload);
+        if (payload.new) {
+          setUsernameState(payload.new.username);
+          setDescriptionState(payload.new.description);
+        }
+      })
+      .subscribe();
+
+    return () => {
+      // profileSubscription.unsubscribe();
+      supabase.removeSubscription(profileSubscription);
+    };
   }, []);
 
   // FIXME user arrives null, this contains user info. this happens because the user has not verified their email. Create a verification flow
   // console.log(loggedInUserId);
   // console.log(user);
-  console.log('DB DATA:');
-  console.table({ hubOwnerId, avatar, username, description });
-
-  console.log('STATE DATA:');
-  console.table({ userId, avatar, usernameEdit, descriptionEdit });
 
   // CRUD mutations
   const updateProfile = async (userId, avatar, username, description) => {
@@ -62,8 +72,6 @@ export default function Hub(props) {
       .update({ avatar, username, description })
       .eq('id', userId);
 
-    console.log(data);
-    console.error(error);
     setEditing(!editing);
   };
 
@@ -97,21 +105,21 @@ export default function Hub(props) {
               <Input
                 className="mb-2"
                 placeholder="Username"
-                value={usernameEdit}
-                onChange={(e) => setUsernameEdit(e.target.value)}
+                value={usernameState}
+                onChange={(e) => setUsernameState(e.target.value)}
               />
               <Input
                 placeholder="Description"
-                value={descriptionEdit}
-                onChange={(e) => setDescriptionEdit(e.target.value)}
+                value={descriptionState}
+                onChange={(e) => setDescriptionState(e.target.value)}
               />
             </div>
           ) : (
             <div>
               <h1 className="font-bold text-2xl mb-2">
-                {username ?? 'Username'}
+                {usernameState ?? 'Username'}
               </h1>
-              <h2 className="text-md">{description ?? 'Description'}</h2>
+              <h2 className="text-md">{descriptionState ?? 'Description'}</h2>
             </div>
           )}
         </div>
@@ -140,7 +148,7 @@ export default function Hub(props) {
             <Button
               text="Complete Edit"
               onClick={() =>
-                updateProfile(userId, null, usernameEdit, descriptionEdit)
+                updateProfile(userId, null, usernameState, descriptionState)
               }
             />
           )}
