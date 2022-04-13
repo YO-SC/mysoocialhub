@@ -76,6 +76,22 @@ export default function SignUp() {
       return alert(hubError.message);
     }
 
+    // login the user in order to be able to use supabase.auth.user()
+    // https://supabase.com/docs/reference/javascript/auth-user
+    // FIXME do an email confirmation verification flow
+    // const { user: userLogin, error: userLoginError } =
+    //   await supabase.auth.signIn({
+    //     email,
+    //     password,
+    //   });
+
+    // console.log(userLogin);
+    // console.error(userLoginError);
+    // if (userLoginError) {
+    //   // TODO display errors on ui (with better ux/ui)
+    //   return alert(userLoginError.message);
+    // }
+
     return router.push(`/hub/${hubData[0].id}`);
   };
 
