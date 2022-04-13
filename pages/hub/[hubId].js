@@ -2,10 +2,10 @@ import Error from 'next/error';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { FaReact } from 'react-icons/fa';
+import Button from '../../components/Button';
+import Input from '../../components/Input';
 import ProfilePicture from '../../components/ProfilePicture';
 import { supabase } from '../../utils/supabaseClient';
-import Input from '../../components/Input';
-import Button from '../../components/Button';
 
 const user = supabase.auth.user();
 
@@ -16,6 +16,8 @@ export default function Hub(props) {
 
   const [ableToEdit, setAbleToEdit] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [userId, setUserId] = useState();
+  const [avatarEdit, setAvatarEdit] = useState('');
   const [usernameEdit, setUsernameEdit] = useState('');
   const [descriptionEdit, setDescriptionEdit] = useState('');
   // TODO if this is the logged in user's hub, be able to edit stuff
@@ -29,15 +31,41 @@ export default function Hub(props) {
 
   useEffect(() => {
     if (user) {
+      setUserId(user.id);
       if (user.id === hubOwnerId) {
         setAbleToEdit(true);
       }
     }
+
+    if (username) setUsernameEdit(username);
+    if (description) setDescriptionEdit(description);
   }, []);
 
   // FIXME user arrives null, this contains user info. this happens because the user has not verified their email. Create a verification flow
   // console.log(loggedInUserId);
   // console.log(user);
+  console.log('DB DATA:');
+  console.table({ hubOwnerId, avatar, username, description });
+
+  console.log('STATE DATA:');
+  console.table({ userId, avatar, usernameEdit, descriptionEdit });
+
+  // CRUD mutations
+  const updateProfile = async (userId, avatar, username, description) => {
+    // TODO have better UX/UI for if returns
+    if (!userId) return alert('please provide a userId');
+    if (!username) return alert('please put a username');
+    if (!description) return alert('please put a description');
+
+    const { data, error } = await supabase
+      .from('hub_owner')
+      .update({ avatar, username, description })
+      .eq('id', userId);
+
+    console.log(data);
+    console.error(error);
+    setEditing(!editing);
+  };
 
   return (
     <main className="lg:grid lg:grid-cols-12 h-screen w-full">
@@ -69,10 +97,12 @@ export default function Hub(props) {
               <Input
                 className="mb-2"
                 placeholder="Username"
+                value={usernameEdit}
                 onChange={(e) => setUsernameEdit(e.target.value)}
               />
               <Input
                 placeholder="Description"
+                value={descriptionEdit}
                 onChange={(e) => setDescriptionEdit(e.target.value)}
               />
             </div>
@@ -109,7 +139,9 @@ export default function Hub(props) {
           {editing && (
             <Button
               text="Complete Edit"
-              // onClick={() => setEditing(!editing)}
+              onClick={() =>
+                updateProfile(userId, null, usernameEdit, descriptionEdit)
+              }
             />
           )}
 
