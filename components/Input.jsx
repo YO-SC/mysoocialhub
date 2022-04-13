@@ -13,6 +13,7 @@ export default function Input(props) {
     name = type,
     id = type,
     onChange = () => console.log('changing input'),
+    value = undefined,
   } = props;
 
   return (
@@ -23,6 +24,7 @@ export default function Input(props) {
       name={name}
       id={id}
       onChange={onChange}
+      value={value && value}
     />
   );
 }
