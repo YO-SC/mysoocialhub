@@ -56,7 +56,7 @@ export default function Hub(props) {
     };
   }, []);
 
-  // FIXME user arrives null, this contains user info. this happens because the user has not verified their email. Create a verification flow
+  // FIXME user arrives null, this contains user info. this happens because the user has not verified their email. Create a verification flow. The user must confirm email and the login. Either force the flow or find a way to do that automatically
   // console.log(loggedInUserId);
   // console.log(user);
 

@@ -16,6 +16,8 @@ export default function Input(props) {
     value = undefined,
   } = props;
 
+  // TODO if type === textarea, render a <textarea name="Text1" cols="40" rows="5"></textarea>
+
   return (
     <input
       className={`${bgColor} px-4 py-3 rounded-xl ${textColor} font-semibold ${outline} ${border} ${className}`}
