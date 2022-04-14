@@ -65,7 +65,7 @@ export default function Hub(props) {
     // TODO have better UX/UI for if returns
     if (!userId) return alert('please provide a userId');
     if (!username) return alert('please put a username');
-    if (!description) return alert('please put a description');
+    // if (!description) return alert('please put a description');
 
     // TODO be able to update avatar
     const { data, error } = await supabase
@@ -142,7 +142,7 @@ export default function Hub(props) {
             return <SocialMediaCard key={id} name={name} url={url} />;
           })}
 
-        {(!socialMedias || ableToEdit) && (
+        {ableToEdit && (
           <Button
             className="!w-full !p-8 text-lg font-semibold"
             text="Add social media"
