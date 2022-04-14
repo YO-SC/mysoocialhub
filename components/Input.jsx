@@ -14,6 +14,7 @@ export default function Input(props) {
     id = type,
     onChange = () => console.log('changing input'),
     value = undefined,
+    autoComplete = undefined,
   } = props;
 
   // TODO if type === textarea, render a <textarea name="Text1" cols="40" rows="5"></textarea>
@@ -27,6 +28,7 @@ export default function Input(props) {
       id={id}
       onChange={onChange}
       value={value && value}
+      autoComplete={autoComplete && autoComplete}
     />
   );
 }
