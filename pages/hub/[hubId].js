@@ -22,6 +22,8 @@ export default function Hub(props) {
   const [avatarEdit, setAvatarEdit] = useState('');
   const [usernameState, setUsernameState] = useState('');
   const [descriptionState, setDescriptionState] = useState('');
+  const [socialMediaName, setSocialMediaName] = useState('');
+  const [socialMediaUrl, setSocialMediaUrl] = useState('');
   const {
     hub: {
       owner: { id: hubOwnerId, avatar, username, description },
@@ -94,8 +96,16 @@ export default function Hub(props) {
         <h1 className="text-lg font-semibold">Social Media</h1>
 
         <span className="flex flex-col gap-3">
-          <Input placeholder="Name" autoComplete="off" />
-          <Input placeholder="Url" autoComplete="off" />
+          <Input
+            placeholder="Name"
+            autoComplete="off"
+            onChange={(e) => setSocialMediaName(e.target.value)}
+          />
+          <Input
+            placeholder="Url"
+            autoComplete="off"
+            onChange={(e) => setSocialMediaUrl(e.target.value)}
+          />
         </span>
 
         <span className="flex gap-3 self-end">
