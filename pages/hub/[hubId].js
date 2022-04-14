@@ -6,6 +6,7 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 import ProfilePicture from '../../components/ProfilePicture';
 import { supabase } from '../../utils/supabaseClient';
+import Modal from '../../components/Modal';
 
 const user = supabase.auth.user();
 
@@ -14,6 +15,7 @@ export default function Hub(props) {
     return <Error statusCode={404} />;
   }
 
+  const [openModal, setOpenModal] = useState(false);
   const [ableToEdit, setAbleToEdit] = useState(false);
   const [editing, setEditing] = useState(false);
   const [userId, setUserId] = useState();
@@ -87,6 +89,21 @@ export default function Hub(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      {/* modal */}
+      <Modal isOpen={openModal}>
+        <h1 className="text-lg font-semibold">Social Media</h1>
+
+        <span className="flex flex-col gap-3">
+          <Input placeholder="Name" autoComplete="off" />
+          <Input placeholder="Url" autoComplete="off" />
+        </span>
+
+        <span className="flex gap-3 self-end">
+          <Button text="Close" onClick={() => setOpenModal(false)} />
+          <Button text="Add to hub" />
+        </span>
+      </Modal>
+
       {/* user info */}
       <section
         className={`${
@@ -146,6 +163,7 @@ export default function Hub(props) {
           <Button
             className="!w-full !p-8 text-lg font-semibold"
             text="Add social media"
+            onClick={() => setOpenModal(true)}
           />
         )}
       </section>
