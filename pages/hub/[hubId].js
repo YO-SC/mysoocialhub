@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 import { FaReact } from 'react-icons/fa';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+import Modal from '../../components/Modal';
 import ProfilePicture from '../../components/ProfilePicture';
 import { supabase } from '../../utils/supabaseClient';
-import Modal from '../../components/Modal';
 
 const user = supabase.auth.user();
 
@@ -18,6 +18,7 @@ export default function Hub(props) {
   const [openModal, setOpenModal] = useState(false);
   const [ableToEdit, setAbleToEdit] = useState(false);
   const [editing, setEditing] = useState(false);
+  // FIXME why userId is on state!?, i dont think its necessary
   const [userId, setUserId] = useState();
   const [avatarEdit, setAvatarEdit] = useState('');
   const [usernameState, setUsernameState] = useState('');
@@ -26,6 +27,7 @@ export default function Hub(props) {
   const [socialMediaUrl, setSocialMediaUrl] = useState('');
   const {
     hub: {
+      id: hubId,
       owner: { id: hubOwnerId, avatar, username, description },
       social_medias: socialMedias,
       theme: { primaryColor, secondaryColor },
@@ -46,7 +48,6 @@ export default function Hub(props) {
     const profileSubscription = supabase
       .from('hub_owner')
       .on('UPDATE', (payload) => {
-        // console.log('Change received!', payload);
         if (payload.new) {
           setUsernameState(payload.new.username);
           setDescriptionState(payload.new.description);
@@ -54,22 +55,32 @@ export default function Hub(props) {
       })
       .subscribe();
 
+    const socialMediaSubscription = supabase
+      .from('hub_social_media')
+      .on('*', (payload) => {
+        if (payload.new) {
+          // TODO display new social media on app
+          // setUsernameState(payload.new.username);
+          // setDescriptionState(payload.new.description);
+          console.log(payload.new);
+        }
+      })
+      .subscribe();
+
     return () => {
       // profileSubscription.unsubscribe();
       supabase.removeSubscription(profileSubscription);
+      supabase.removeSubscription(socialMediaSubscription);
     };
   }, []);
 
   // FIXME user arrives null, this contains user info. this happens because the user has not verified their email. Create a verification flow. The user must confirm email and the login. Either force the flow or find a way to do that automatically
-  // console.log(loggedInUserId);
-  // console.log(user);
 
   // CRUD mutations
   const updateProfile = async (userId, username, description) => {
     // TODO have better UX/UI for if returns
     if (!userId) return alert('please provide a userId');
     if (!username) return alert('please put a username');
-    // if (!description) return alert('please put a description');
 
     // TODO be able to update avatar
     const { data, error } = await supabase
@@ -78,6 +89,23 @@ export default function Hub(props) {
       .eq('id', userId);
 
     setEditing(!editing);
+  };
+
+  const createSocialMedia = async (hubId, name, url) => {
+    // TODO have better UX/UI for if returns
+    if (!hubId) return alert('please provide a hubId');
+    if (!socialMediaName || !socialMediaUrl)
+      return alert('please provide a social media name or url');
+
+    const { data, error } = await supabase
+      .from('hub_social_media')
+      .insert([{ hub: hubId, name, url }]);
+
+    setSocialMediaName('');
+    setSocialMediaUrl('');
+    setOpenModal(false);
+
+    // return alert(`gonna add: ${socialMediaName} ${socialMediaUrl}`);
   };
 
   return (
@@ -99,18 +127,25 @@ export default function Hub(props) {
           <Input
             placeholder="Name"
             autoComplete="off"
+            value={socialMediaName}
             onChange={(e) => setSocialMediaName(e.target.value)}
           />
           <Input
             placeholder="Url"
             autoComplete="off"
+            value={socialMediaUrl}
             onChange={(e) => setSocialMediaUrl(e.target.value)}
           />
         </span>
 
         <span className="flex gap-3 self-end">
           <Button text="Close" onClick={() => setOpenModal(false)} />
-          <Button text="Add to hub" />
+          <Button
+            text="Add to hub"
+            onClick={() =>
+              createSocialMedia(hubId, socialMediaName, socialMediaUrl)
+            }
+          />
         </span>
       </Modal>
 
