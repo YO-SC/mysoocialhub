@@ -1,10 +1,9 @@
 import Error from 'next/error';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { FaReact } from 'react-icons/fa';
 import Button from '../../components/Button';
-import { useRouter } from 'next/router';
-
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import ProfilePicture from '../../components/ProfilePicture';
