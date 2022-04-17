@@ -2,7 +2,7 @@ import Error from 'next/error';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { FaReact } from 'react-icons/fa';
+import { FaReact, FaEdit } from 'react-icons/fa';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
@@ -212,7 +212,14 @@ export default function Hub(props) {
           socialMedias.map((socialMedia) => {
             const { id, name, url } = socialMedia;
 
-            return <SocialMediaCard key={id} name={name} url={url} />;
+            return (
+              <SocialMediaCard
+                key={id}
+                name={name}
+                url={url}
+                ableToEdit={ableToEdit}
+              />
+            );
           })}
 
         {ableToEdit && (
@@ -253,18 +260,29 @@ const SocialMediaCard = ({
   icon = <FaReact size="2.5rem" color="white" />,
   name = 'Social Media Name',
   url = '#',
+  ableToEdit = false,
 }) => {
   return (
-    <div className={`${bgColor} p-8 rounded-xl`}>
+    <div
+      className={`${bgColor} p-8 rounded-xl groupf flex gap-3 justify-between`}
+    >
       <a
         // w-fit h-fit flex-1 <- if need to dynamically adjust size
-        className="flex gap-3 items-center"
+        className="flex gap-3 items-center w-full"
         href={url}
         target="_blank"
       >
         {/* <span>{icon}</span> */}
         <h3 className="text-lg font-semibold text-white">{name}</h3>
       </a>
+
+      {ableToEdit && (
+        <Button
+          className="!p-2 rounded-full group-hover:block  hover:bg-accent-secondary hover:outline hover:outline-primary hover:cursor-pointer"
+          icon={<FaEdit />}
+          text={null}
+        />
+      )}
     </div>
   );
 };
