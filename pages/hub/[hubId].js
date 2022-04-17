@@ -3,6 +3,8 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { FaReact } from 'react-icons/fa';
 import Button from '../../components/Button';
+import { useRouter } from 'next/router';
+
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import ProfilePicture from '../../components/ProfilePicture';
@@ -14,6 +16,12 @@ export default function Hub(props) {
   if (props.errors.errHub || props.errors.errHubSocialMedia) {
     return <Error statusCode={404} />;
   }
+  const router = useRouter();
+  // Call this function whenever you want to
+  // refresh props!
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
 
   const [openModal, setOpenModal] = useState(false);
   const [ableToEdit, setAbleToEdit] = useState(false);
@@ -104,6 +112,8 @@ export default function Hub(props) {
     setSocialMediaName('');
     setSocialMediaUrl('');
     setOpenModal(false);
+
+    refreshData();
 
     // return alert(`gonna add: ${socialMediaName} ${socialMediaUrl}`);
   };
