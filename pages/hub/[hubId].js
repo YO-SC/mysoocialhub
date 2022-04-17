@@ -53,6 +53,8 @@ export default function Hub(props) {
     if (username) setUsernameState(username);
     if (description) setDescriptionState(description);
 
+    // NOTE concider subscription implementation, they dont seem to be so useful on this app. All "live" changes occur at the moment of a mutation just for the hub owners and their hubs, a page refetch will do since other places on the app dont care about changes in hub (at least for now)
+
     const profileSubscription = supabase
       .from('hub_owner')
       .on('UPDATE', (payload) => {
@@ -104,6 +106,8 @@ export default function Hub(props) {
     if (!hubId) return alert('please provide a hubId');
     if (!socialMediaName || !socialMediaUrl)
       return alert('please provide a social media name or url');
+    if (!socialMediaUrl.includes('https'))
+      return alert('a valid and secure url (https) is required');
 
     const { data, error } = await supabase
       .from('hub_social_media')
@@ -114,8 +118,6 @@ export default function Hub(props) {
     setOpenModal(false);
 
     refreshData();
-
-    // return alert(`gonna add: ${socialMediaName} ${socialMediaUrl}`);
   };
 
   return (
@@ -234,7 +236,11 @@ export default function Hub(props) {
             />
           )}
 
-          <Button text="Edit" onClick={() => setEditing(!editing)} />
+          <Button
+            text="Edit"
+            className="outline outline-primary"
+            onClick={() => setEditing(!editing)}
+          />
         </span>
       )}
     </main>
