@@ -263,9 +263,7 @@ const SocialMediaCard = ({
   ableToEdit = false,
 }) => {
   return (
-    <div
-      className={`${bgColor} p-8 rounded-xl groupf flex gap-3 justify-between`}
-    >
+    <div className={`${bgColor} p-8 rounded-xl flex gap-3 justify-between`}>
       <a
         // w-fit h-fit flex-1 <- if need to dynamically adjust size
         className="flex gap-3 items-center w-full"
@@ -276,9 +274,10 @@ const SocialMediaCard = ({
         <h3 className="text-lg font-semibold text-white">{name}</h3>
       </a>
 
+      {/* if you want to display the edit button while hovering, use group classes */}
       {ableToEdit && (
         <Button
-          className="!p-2 rounded-full group-hover:block  hover:bg-accent-secondary hover:outline hover:outline-primary hover:cursor-pointer"
+          className="!p-2 rounded-full hover:bg-accent-secondary hover:outline hover:outline-primary hover:cursor-pointer"
           icon={<FaEdit />}
           text={null}
         />
