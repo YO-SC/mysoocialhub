@@ -2,7 +2,7 @@ import Error from 'next/error';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { FaReact, FaEdit } from 'react-icons/fa';
+import { FaReact, FaEdit, FaTrash } from 'react-icons/fa';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
@@ -99,6 +99,7 @@ export default function Hub(props) {
         break;
 
       case 'delete':
+        deleteSocialMedia(socialMediaId);
         break;
 
       default:
@@ -142,7 +143,7 @@ export default function Hub(props) {
 
   const updateSocialMedia = async (socialMediaId, name, url) => {
     // TODO have better UX/UI for if returns
-    if (!socialMediaId) return alert('please provide a hubId');
+    if (!socialMediaId) return alert('please provide a socialMediaId');
     if (!socialMediaName || !socialMediaUrl)
       return alert('please provide a social media name or url');
     if (!socialMediaUrl.includes('https'))
@@ -151,6 +152,22 @@ export default function Hub(props) {
     const { data, error } = await supabase
       .from('hub_social_media')
       .update([{ name, url }])
+      .eq('id', socialMediaId);
+
+    setSocialMediaName('');
+    setSocialMediaUrl('');
+    setOpenModal(false);
+
+    refreshData();
+  };
+
+  const deleteSocialMedia = async (socialMediaId) => {
+    // TODO have better UX/UI for if returns
+    if (!socialMediaId) return alert('please provide a socialMediaId');
+
+    const { data, error } = await supabase
+      .from('hub_social_media')
+      .delete()
       .eq('id', socialMediaId);
 
     setSocialMediaName('');
@@ -176,18 +193,28 @@ export default function Hub(props) {
         <h1 className="text-lg font-semibold">Social Media</h1>
 
         <span className="flex flex-col gap-3">
-          <Input
-            placeholder="Name"
-            autoComplete="off"
-            value={socialMediaName}
-            onChange={(e) => setSocialMediaName(e.target.value)}
-          />
-          <Input
-            placeholder="Url"
-            autoComplete="off"
-            value={socialMediaUrl}
-            onChange={(e) => setSocialMediaUrl(e.target.value)}
-          />
+          {modalAction === 'delete' ? (
+            <p>
+              This will{' '}
+              <span className="font-bold italic">permanently delete</span> the
+              social media. Are you sure you want to delete it?
+            </p>
+          ) : (
+            <>
+              <Input
+                placeholder="Name"
+                autoComplete="off"
+                value={socialMediaName}
+                onChange={(e) => setSocialMediaName(e.target.value)}
+              />
+              <Input
+                placeholder="Url"
+                autoComplete="off"
+                value={socialMediaUrl}
+                onChange={(e) => setSocialMediaUrl(e.target.value)}
+              />
+            </>
+          )}
         </span>
 
         <span className="flex gap-3 self-end">
@@ -342,19 +369,35 @@ const SocialMediaCard = ({
 
       {/* if you want to display the edit button while hovering, use group classes */}
       {ableToEdit && (
-        <Button
-          className="!p-2 rounded-full hover:bg-accent-secondary hover:outline hover:outline-primary hover:cursor-pointer"
-          icon={<FaEdit />}
-          text={null}
-          onClick={() => {
-            setModalAction('update');
-            setModalConfirmText('Edit');
-            setSocialMediaId(id);
-            setSocialMediaName(name);
-            setSocialMediaUrl(url);
-            setOpenModal(true);
-          }}
-        />
+        <span className="flex gap-3 items-center">
+          <Button
+            className="!p-2 rounded-full hover:bg-accent-secondary hover:outline hover:outline-primary hover:cursor-pointer"
+            icon={<FaEdit />}
+            text={null}
+            onClick={() => {
+              setModalAction('update');
+              setModalConfirmText('Edit');
+              setSocialMediaId(id);
+              setSocialMediaName(name);
+              setSocialMediaUrl(url);
+              setOpenModal(true);
+            }}
+          />
+
+          <Button
+            className="!p-2 rounded-full hover:bg-accent-secondary hover:outline hover:outline-primary hover:cursor-pointer"
+            icon={<FaTrash />}
+            text={null}
+            onClick={() => {
+              setModalAction('delete');
+              setModalConfirmText('Delete');
+              setSocialMediaId(id);
+              setSocialMediaName(name);
+              setSocialMediaUrl(url);
+              setOpenModal(true);
+            }}
+          />
+        </span>
       )}
     </div>
   );
