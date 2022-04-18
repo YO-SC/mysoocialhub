@@ -2,7 +2,7 @@ import Error from 'next/error';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { FaReact, FaEdit, FaTrash } from 'react-icons/fa';
+import { FaEdit, FaReact, FaTrash } from 'react-icons/fa';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
@@ -37,6 +37,7 @@ export default function Hub(props) {
   const [socialMediaName, setSocialMediaName] = useState('');
   const [socialMediaUrl, setSocialMediaUrl] = useState('');
   // FIXME user arrives null, this contains user info. this happens because the user has not verified their email. Create a verification flow. The user must confirm email and the login. Either force the flow or find a way to do that automatically
+  // TODO a better email flow, when a user signs up prompt them to their email, the email then will redirect to the login. have instructions on email, login or signup screen
   const {
     hub: {
       id: hubId,
