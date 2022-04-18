@@ -61,7 +61,15 @@ export default function Home() {
             YOUR SOCIALS WITH A HUB. <br /> START NOW.
           </h2>
 
-          <Button className="self-center" />
+          <span className="flex gap-4 items-center justify-center">
+            <Link href="/signup">
+              <Button className="self-center" text="Sign Up" />
+            </Link>
+
+            <Link href="/login">
+              <Button className="self-center" text="Login" />
+            </Link>
+          </span>
         </div>
       </section>
     </div>
