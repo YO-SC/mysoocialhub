@@ -8,9 +8,16 @@ import { supabase } from '../utils/supabaseClient';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [userLoggingIn, setUserLoggingIn] = useState(false);
   const router = useRouter();
 
   const userLogin = async (email, password) => {
+    if (!email || !password) {
+      return alert('fill the login plz');
+    }
+
+    setUserLoggingIn(true);
+
     const { user, error } = await supabase.auth.signIn({
       email,
       password,
@@ -18,6 +25,7 @@ export default function Login() {
 
     // TODO better handle the errors
     if (error) {
+      setUserLoggingIn(false);
       return alert(error);
     }
 
@@ -61,8 +69,9 @@ export default function Login() {
           {/*  // TODO make link href dynamic upon login, redirect user after login check/mutation */}
           <Button
             className="self-end"
-            text="login"
+            text={userLoggingIn ? 'logging in...' : 'login'}
             onClick={() => userLogin(email, password)}
+            disabled={userLoggingIn}
           />
         </div>
       </section>
@@ -70,8 +79,8 @@ export default function Login() {
       {/* quotes */}
       <section className="bg-secondary col-span-6 grid place-items-center p-10 px-20">
         <h2 className="text-3xl font-bold">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Optio,
-          fugit.
+          Login to your hub, add to it, customize it, and share it with your
+          fans.
         </h2>
       </section>
     </div>
