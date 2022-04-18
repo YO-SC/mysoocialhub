@@ -108,6 +108,14 @@ export default function Hub(props) {
     }
   };
 
+  const signOut = async () => {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) return alert(error);
+
+    return router.push('/');
+  };
+
   // CRUD mutations
   const updateProfile = async (userId, username, description) => {
     // TODO have better UX/UI for if returns
@@ -320,6 +328,12 @@ export default function Hub(props) {
 
       {ableToEdit && (
         <span className="absolute right-5 bottom-5 flex gap-3">
+          <Button
+            className="outline outline-primary text-lg font-semibold"
+            text="Sign Out"
+            onClick={() => signOut()}
+          />
+
           {editing && (
             <Button
               className="outline outline-primary text-lg font-semibold"
