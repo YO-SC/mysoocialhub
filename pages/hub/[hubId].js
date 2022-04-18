@@ -23,6 +23,8 @@ export default function Hub(props) {
   };
 
   const [openModal, setOpenModal] = useState(false);
+  const [modalAction, setModalAction] = useState(null);
+  const [modalConfirmText, setModalConfirmText] = useState('');
   const [ableToEdit, setAbleToEdit] = useState(false);
   const [editing, setEditing] = useState(false);
   // FIXME why userId is on state!?, i dont think its necessary
@@ -30,8 +32,11 @@ export default function Hub(props) {
   const [avatarEdit, setAvatarEdit] = useState('');
   const [usernameState, setUsernameState] = useState('');
   const [descriptionState, setDescriptionState] = useState('');
+  // UGLY try to not store id on state, also refactor hooks in the future
+  const [socialMediaId, setSocialMediaId] = useState('');
   const [socialMediaName, setSocialMediaName] = useState('');
   const [socialMediaUrl, setSocialMediaUrl] = useState('');
+  // FIXME user arrives null, this contains user info. this happens because the user has not verified their email. Create a verification flow. The user must confirm email and the login. Either force the flow or find a way to do that automatically
   const {
     hub: {
       id: hubId,
@@ -52,7 +57,7 @@ export default function Hub(props) {
     if (username) setUsernameState(username);
     if (description) setDescriptionState(description);
 
-    // NOTE concider subscription implementation, they dont seem to be so useful on this app. All "live" changes occur at the moment of a mutation just for the hub owners and their hubs, a page refetch will do since other places on the app dont care about changes in hub (at least for now)
+    // NOTE consider subscription implementation, they dont seem to be so useful on this app. All "live" changes occur at the moment of a mutation just for the hub owners and their hubs, a page refetch will do since other places on the app dont care about changes in hub (at least for now)
 
     const profileSubscription = supabase
       .from('hub_owner')
@@ -83,7 +88,23 @@ export default function Hub(props) {
     };
   }, []);
 
-  // FIXME user arrives null, this contains user info. this happens because the user has not verified their email. Create a verification flow. The user must confirm email and the login. Either force the flow or find a way to do that automatically
+  const doAction = (action) => {
+    switch (action) {
+      case 'create':
+        createSocialMedia(hubId, socialMediaName, socialMediaUrl);
+        break;
+
+      case 'update':
+        updateSocialMedia(socialMediaId, socialMediaName, socialMediaUrl);
+        break;
+
+      case 'delete':
+        break;
+
+      default:
+        break;
+    }
+  };
 
   // CRUD mutations
   const updateProfile = async (userId, username, description) => {
@@ -111,6 +132,26 @@ export default function Hub(props) {
     const { data, error } = await supabase
       .from('hub_social_media')
       .insert([{ hub: hubId, name, url }]);
+
+    setSocialMediaName('');
+    setSocialMediaUrl('');
+    setOpenModal(false);
+
+    refreshData();
+  };
+
+  const updateSocialMedia = async (socialMediaId, name, url) => {
+    // TODO have better UX/UI for if returns
+    if (!socialMediaId) return alert('please provide a hubId');
+    if (!socialMediaName || !socialMediaUrl)
+      return alert('please provide a social media name or url');
+    if (!socialMediaUrl.includes('https'))
+      return alert('a valid and secure url (https) is required');
+
+    const { data, error } = await supabase
+      .from('hub_social_media')
+      .update([{ name, url }])
+      .eq('id', socialMediaId);
 
     setSocialMediaName('');
     setSocialMediaUrl('');
@@ -150,12 +191,17 @@ export default function Hub(props) {
         </span>
 
         <span className="flex gap-3 self-end">
-          <Button text="Close" onClick={() => setOpenModal(false)} />
           <Button
-            text="Add to hub"
-            onClick={() =>
-              createSocialMedia(hubId, socialMediaName, socialMediaUrl)
-            }
+            text="Close"
+            onClick={() => {
+              setSocialMediaName('');
+              setSocialMediaUrl('');
+              setOpenModal(false);
+            }}
+          />
+          <Button
+            text={modalConfirmText}
+            onClick={() => doAction(modalAction)}
           />
         </span>
       </Modal>
@@ -215,9 +261,16 @@ export default function Hub(props) {
             return (
               <SocialMediaCard
                 key={id}
+                id={id}
                 name={name}
                 url={url}
                 ableToEdit={ableToEdit}
+                setOpenModal={setOpenModal}
+                setSocialMediaId={setSocialMediaId}
+                setSocialMediaName={setSocialMediaName}
+                setSocialMediaUrl={setSocialMediaUrl}
+                setModalConfirmText={setModalConfirmText}
+                setModalAction={setModalAction}
               />
             );
           })}
@@ -226,7 +279,13 @@ export default function Hub(props) {
           <Button
             className="!w-full !p-8 text-lg font-semibold"
             text="Add social media"
-            onClick={() => setOpenModal(true)}
+            onClick={() => {
+              setModalConfirmText('Add');
+              setModalAction('create');
+              setSocialMediaName('');
+              setSocialMediaUrl('');
+              setOpenModal(true);
+            }}
           />
         )}
       </section>
@@ -257,10 +316,17 @@ export default function Hub(props) {
 
 const SocialMediaCard = ({
   bgColor = 'bg-accent-primary',
+  id = null,
   icon = <FaReact size="2.5rem" color="white" />,
   name = 'Social Media Name',
   url = '#',
   ableToEdit = false,
+  setOpenModal = null,
+  setSocialMediaName = null,
+  setSocialMediaUrl = null,
+  setModalConfirmText = null,
+  setModalAction = null,
+  setSocialMediaId = null,
 }) => {
   return (
     <div className={`${bgColor} p-8 rounded-xl flex gap-3 justify-between`}>
@@ -280,6 +346,14 @@ const SocialMediaCard = ({
           className="!p-2 rounded-full hover:bg-accent-secondary hover:outline hover:outline-primary hover:cursor-pointer"
           icon={<FaEdit />}
           text={null}
+          onClick={() => {
+            setModalAction('update');
+            setModalConfirmText('Edit');
+            setSocialMediaId(id);
+            setSocialMediaName(name);
+            setSocialMediaUrl(url);
+            setOpenModal(true);
+          }}
         />
       )}
     </div>
