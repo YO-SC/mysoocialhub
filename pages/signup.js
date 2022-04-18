@@ -1,15 +1,13 @@
 import Head from 'next/head';
-import Link from 'next/link';
+import { useState } from 'react';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import { supabase } from '../utils/supabaseClient';
-import { useState } from 'react';
-import { useRouter } from 'next/router';
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const router = useRouter();
+  // const router = useRouter();
 
   const userSignUp = async (email, password) => {
     if (!email || !password) {
@@ -20,10 +18,6 @@ export default function SignUp() {
       email,
       password,
     });
-
-    console.log('signed up user', user);
-    console.log('signed up user session', session);
-    console.error('signed up user', error);
 
     if (error) {
       // TODO display errors on ui (with better ux/ui)
@@ -39,8 +33,6 @@ export default function SignUp() {
         description: null,
       });
 
-    console.log(hubOwnerData);
-    console.error(hubOwnerError);
     if (hubOwnerError) {
       // TODO display errors on ui (with better ux/ui)
       return alert(hubOwnerError.message);
@@ -55,8 +47,6 @@ export default function SignUp() {
         secondaryAccent: null,
       });
 
-    console.log(hubThemeData);
-    console.error(hubThemeError);
     if (hubThemeError) {
       // TODO display errors on ui (with better ux/ui)
       return alert(hubThemeError.message);
@@ -69,8 +59,6 @@ export default function SignUp() {
         theme: hubThemeData[0].id,
       });
 
-    console.log(hubData);
-    console.error(hubError);
     if (hubError) {
       // TODO display errors on ui (with better ux/ui)
       return alert(hubError.message);
@@ -92,7 +80,7 @@ export default function SignUp() {
     //   return alert(userLoginError.message);
     // }
 
-    return router.push(`/hub/${hubData[0].id}`);
+    // return router.push(`/hub/${hubData[0].id}`);
   };
 
   return (
@@ -123,19 +111,18 @@ export default function SignUp() {
             onChange={(e) => setPassword(e.target.value)}
           />
           {/*  // TODO make link href dynamic upon sign up, redirect user after sign up check/mutation */}
-          {/* <Link href="/hub/1234"> */}
           <Button
             className="self-end"
             text="sign up"
             onClick={() => userSignUp(email, password)}
           />
-          {/* </Link> */}
         </div>
       </section>
 
       {/* quotes */}
       <section className="bg-secondary col-span-6 grid place-items-center p-10 px-20">
         <h2 className="text-3xl font-bold">
+          {/* // TODO put email verification instructions here */}
           Lorem ipsum dolor sit amet consectetur, adipisicing elit. Optio,
           fugit.
         </h2>
