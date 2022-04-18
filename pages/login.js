@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-// import Link from 'next/link';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import { supabase } from '../utils/supabaseClient';
@@ -10,8 +9,6 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
-  // console.log(email);
-  // console.log(password);
 
   const userLogin = async (email, password) => {
     const { user, error } = await supabase.auth.signIn({
@@ -21,18 +18,14 @@ export default function Login() {
 
     // TODO better handle the errors
     if (error) {
-      return;
+      return alert(error);
     }
 
-    // console.log('the logged in user', user);
-    // console.error('the logged in error', error);
     const { data: hub, error: errHub } = await supabase
       .from('hub')
       .select('id')
       .eq('owner', user.id)
       .single();
-
-    // console.log(hub);
 
     return router.push(`/hub/${hub.id}`);
   };
@@ -66,13 +59,11 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
           {/*  // TODO make link href dynamic upon login, redirect user after login check/mutation */}
-          {/* <Link href="/hub/1234"> */}
           <Button
             className="self-end"
             text="login"
             onClick={() => userLogin(email, password)}
           />
-          {/* </Link> */}
         </div>
       </section>
 
