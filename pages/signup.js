@@ -7,12 +7,15 @@ import { supabase } from '../utils/supabaseClient';
 export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // const router = useRouter();
+  const [userSignedUp, setUserSignedUp] = useState(false);
+  const [userSigningUp, setUserSigningUp] = useState(false);
 
   const userSignUp = async (email, password) => {
     if (!email || !password) {
       return alert('Fill the signup plz');
     }
+
+    setUserSigningUp(true);
 
     const { user, session, error } = await supabase.auth.signUp(
       {
@@ -25,6 +28,7 @@ export default function SignUp() {
     console.table({ user, session, error });
 
     if (error) {
+      setUserSigningUp(false);
       // TODO display errors on ui (with better ux/ui)
       return alert(error.message);
     }
@@ -39,6 +43,7 @@ export default function SignUp() {
       });
 
     if (hubOwnerError) {
+      setUserSigningUp(false);
       // TODO display errors on ui (with better ux/ui)
       return alert(hubOwnerError.message);
     }
@@ -53,6 +58,7 @@ export default function SignUp() {
       });
 
     if (hubThemeError) {
+      setUserSigningUp(false);
       // TODO display errors on ui (with better ux/ui)
       return alert(hubThemeError.message);
     }
@@ -65,27 +71,13 @@ export default function SignUp() {
       });
 
     if (hubError) {
+      setUserSigningUp(false);
       // TODO display errors on ui (with better ux/ui)
       return alert(hubError.message);
     }
 
-    // login the user in order to be able to use supabase.auth.user()
-    // https://supabase.com/docs/reference/javascript/auth-user
-    // FIXME do an email confirmation verification flow
-    // const { user: userLogin, error: userLoginError } =
-    //   await supabase.auth.signIn({
-    //     email,
-    //     password,
-    //   });
-
-    // console.log(userLogin);
-    // console.error(userLoginError);
-    // if (userLoginError) {
-    //   // TODO display errors on ui (with better ux/ui)
-    //   return alert(userLoginError.message);
-    // }
-
-    // return router.push(`/hub/${hubData[0].id}`);
+    setUserSignedUp(true);
+    setUserSigningUp(false);
   };
 
   return (
@@ -118,8 +110,9 @@ export default function SignUp() {
           {/*  // TODO make link href dynamic upon sign up, redirect user after sign up check/mutation */}
           <Button
             className="self-end"
-            text="sign up"
+            text={userSigningUp ? 'signing up...' : 'sign up'}
             onClick={() => userSignUp(email, password)}
+            disabled={userSigningUp || userSignedUp}
           />
         </div>
       </section>
@@ -127,9 +120,9 @@ export default function SignUp() {
       {/* quotes */}
       <section className="bg-secondary col-span-6 grid place-items-center p-10 px-20">
         <h2 className="text-3xl font-bold">
-          {/* // TODO put email verification instructions here */}
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Optio,
-          fugit.
+          {userSignedUp
+            ? 'Signed up ✅. Check and confirm your email to access your hub!'
+            : 'Make your fans life easier by signing up, a hub will be automatically created.'}
         </h2>
       </section>
     </div>
