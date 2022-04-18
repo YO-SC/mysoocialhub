@@ -321,6 +321,7 @@ export default function Hub(props) {
         <span className="absolute right-5 bottom-5 flex gap-3">
           {editing && (
             <Button
+              className="outline outline-primary text-lg font-semibold"
               text="Complete Edit"
               onClick={() =>
                 updateProfile(userId, usernameState, descriptionState)
@@ -329,8 +330,8 @@ export default function Hub(props) {
           )}
 
           <Button
+            className="outline outline-primary text-lg font-semibold"
             text="Edit"
-            className="outline outline-primary"
             onClick={() => setEditing(!editing)}
           />
         </span>
