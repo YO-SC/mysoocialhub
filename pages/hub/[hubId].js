@@ -43,7 +43,7 @@ export default function Hub(props) {
       id: hubId,
       owner: { id: hubOwnerId, avatar, username, description },
       social_medias: socialMedias,
-      theme: { primaryColor, secondaryColor },
+      theme: { primaryColor, secondaryColor, primaryAccent, secondaryAccent },
     },
   } = props;
 
@@ -297,6 +297,7 @@ export default function Hub(props) {
             return (
               <SocialMediaCard
                 key={id}
+                bgColor={primaryAccent && `bg-[${primaryAccent}]`}
                 id={id}
                 name={name}
                 url={url}
@@ -307,13 +308,17 @@ export default function Hub(props) {
                 setSocialMediaUrl={setSocialMediaUrl}
                 setModalConfirmText={setModalConfirmText}
                 setModalAction={setModalAction}
+                primaryAccent={primaryAccent}
+                secondaryAccent={secondaryAccent}
               />
             );
           })}
 
         {ableToEdit && (
           <Button
-            className="!w-full !p-8 text-lg font-semibold"
+            className={`!w-full !p-8 text-lg font-semibold ${
+              primaryAccent && `bg-[${primaryAccent}]`
+            }`}
             text="Add social media"
             onClick={() => {
               setModalConfirmText('Add');
@@ -330,7 +335,9 @@ export default function Hub(props) {
         <span className="absolute right-5 bottom-5 flex gap-3">
           {!editing && (
             <Button
-              className="outline outline-primary text-lg font-semibold"
+              className={`outline outline-primary text-lg font-semibold ${
+                primaryAccent && `bg-[${primaryAccent}]`
+              }`}
               text="Sign Out"
               onClick={() => signOut()}
             />
@@ -338,7 +345,9 @@ export default function Hub(props) {
 
           {editing && (
             <Button
-              className="outline outline-primary text-lg font-semibold"
+              className={`outline outline-primary text-lg font-semibold ${
+                primaryAccent && `bg-[${primaryAccent}]`
+              }`}
               text="Complete Edit"
               onClick={() =>
                 updateProfile(userId, usernameState, descriptionState)
@@ -347,7 +356,9 @@ export default function Hub(props) {
           )}
 
           <Button
-            className="outline outline-primary text-lg font-semibold"
+            className={`outline outline-primary text-lg font-semibold ${
+              primaryAccent && `bg-[${primaryAccent}]`
+            }`}
             text="Edit"
             onClick={() => setEditing(!editing)}
           />
@@ -372,6 +383,8 @@ const SocialMediaCard = ({
   setModalConfirmText = null,
   setModalAction = null,
   setSocialMediaId = null,
+  primaryAccent = null,
+  secondaryAccent = null,
 }) => {
   return (
     <div className={`${bgColor} p-8 rounded-xl flex gap-3 justify-between`}>
@@ -389,7 +402,9 @@ const SocialMediaCard = ({
       {ableToEdit && (
         <span className="flex gap-3 items-center">
           <Button
-            className="!p-2 rounded-full hover:bg-accent-secondary hover:outline hover:outline-primary hover:cursor-pointer"
+            className={`!p-2 rounded-full hover:bg-accent-secondary hover:outline hover:outline-primary hover:cursor-pointer  ${
+              primaryAccent && `bg-[${primaryAccent}]`
+            } ${secondaryAccent && `hover:bg-[${secondaryAccent}]`}`}
             icon={<FaEdit />}
             text={null}
             onClick={() => {
@@ -403,7 +418,9 @@ const SocialMediaCard = ({
           />
 
           <Button
-            className="!p-2 rounded-full hover:bg-accent-secondary hover:outline hover:outline-primary hover:cursor-pointer"
+            className={`!p-2 rounded-full hover:bg-accent-secondary hover:outline hover:outline-primary hover:cursor-pointer ${
+              primaryAccent && `bg-[${primaryAccent}]`
+            } ${secondaryAccent && `hover:bg-[${secondaryAccent}]`}`}
             icon={<FaTrash />}
             text={null}
             onClick={() => {
@@ -439,7 +456,9 @@ export async function getServerSideProps(context) {
       theme(
         id,
         primaryColor,
-        secondaryColor
+        secondaryColor,
+        primaryAccent,
+        secondaryAccent
       )
     `
     )
