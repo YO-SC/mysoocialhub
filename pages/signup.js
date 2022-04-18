@@ -14,10 +14,15 @@ export default function SignUp() {
       return alert('Fill the signup plz');
     }
 
-    const { user, session, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+    const { user, session, error } = await supabase.auth.signUp(
+      {
+        email,
+        password,
+      },
+      { redirectTo: 'http://localhost:3000/login' }
+    );
+
+    console.table({ user, session, error });
 
     if (error) {
       // TODO display errors on ui (with better ux/ui)
